@@ -18,12 +18,12 @@ use pocketmine\utils\{
 
 use Bot\tasks\NPCTask;
 
-class Main extends PluginBase implements Listener{
+class Main extends PluginBase{
 
 	public function onEnable(){
 		@mkdir($this->getDataFolder());
 		$this->saveResource("config.yml");
-		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 		Entity::registerEntity(NPCHuman::class, true);
 	}
 
@@ -36,14 +36,6 @@ class Main extends PluginBase implements Listener{
 		$this->spawnNPC($sender, $args[0]);
 		$sender->sendMessage(TextFormat::GREEN . "Spawned Bot: " . $args[0]);
 		return true;
-	}
-
-	public function onEntitySpawn(EntitySpawnEvent $e): void{
-		$entity = $e->getEntity();
-
-		if($entity instanceof NPCHuman){
-			$this->getServer()->getScheduler()->scheduleRepeatingTask(new NPCTask($this, $entity), 200);
-		}
 	}
 
 	public function getCfg(): Config{
