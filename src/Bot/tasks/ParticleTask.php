@@ -25,14 +25,13 @@ class ParticleTask extends PluginTask{
 		parent::__construct($plugin);
 	}
 
-	public function onRun(int $tick){
+	public function onRun(int $tick): void{
 		if($this->plugin->getCfg()->get("particles") == true){
 			$entity = $this->entity;
 
 			if($entity instanceof NPCHuman){
-				$level = $entity->getLevel();
-
 				if($entity->isAlive()){
+					$level = $this->plugin->getServer()->getLevelByName($this->plugin->getCfg()->get("level"));
 					for($yaw = 0; $yaw <= 10; $yaw += 0.5){
 						$x = 0.5 * sin($yaw);
 						$y = 0.5;

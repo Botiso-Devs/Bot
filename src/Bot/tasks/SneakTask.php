@@ -23,7 +23,7 @@ class SneakTask extends PluginTask{
 		parent::__construct($plugin);
 	}
 
-	public function onRun(int $tick){
+	public function onRun(int $tick): void{
 		if($this->plugin->getCfg()->get("sneak") == true){
 			$entity = $this->entity;
 

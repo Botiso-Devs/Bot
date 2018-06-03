@@ -10,7 +10,7 @@ sneak: true
 unsneak: true
 # Make the bots rotate
 rotation: true
-rotate-distance: 16
+rotate-distance: 5
 # Make the bots swing
 swing: true
 # Make the bots walk
@@ -20,4 +20,7 @@ walk-distance: 0.5
 particles: true
 # damage mode for bots
 damage: true
+
+# Only support 1 level for now
+level: world
 ...

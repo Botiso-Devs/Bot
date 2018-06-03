@@ -15,6 +15,7 @@ use pocketmine\event\entity\{
 };
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\Listener;
+use pocketmine\utils\TextFormat;
 
 use Bot\tasks\NPCTask;
 
@@ -52,6 +53,8 @@ class EventListener implements Listener{
 	}
 
 	public function onDamage(EntityDamageEvent $e): void{
+		$entity = $e->getEntity();
+
 		if($this->plugin->getCfg()->get("damage") == false){
 			if($e instanceof EntityDamageByEntityEvent){
 				$e->setCancelled();
@@ -59,7 +62,7 @@ class EventListener implements Listener{
 		}
 	}
 
-    public function onPlayerMove(PlayerMoveEvent $e) : void{
+    public function onPlayerMove(PlayerMoveEvent $e): void{
     	if($this->plugin->getCfg("rotation") == true){
     		$player = $e->getPlayer();
     		$from = $e->getFrom();
@@ -68,20 +71,20 @@ class EventListener implements Listener{
 
     		if($from->distance($to) < 0.1) return;
     		foreach($player->getLevel()->getNearbyEntities($player->getBoundingBox()->grow($distance, $distance, $distance), $player) as $entity){
-            if($entity instanceof NPCHuman){
-                $pk = new MoveEntityPacket();
-                $v = new Vector2($entity->x, $entity->z);
-                $yaw = ((atan2($player->z - $entity->z, $player->x - $entity->x) * 180) / M_PI) - 90;
-            	$pitch = ((atan2($v->distance($player->x, $player->z), $player->y - $entity->y) * 180) / M_PI) - 90;
-                $pk->entityRuntimeId = $entity->getId();
-                $pk->position = $entity->asVector3()->add(0, 1.5, 0);
-                $pk->yaw = $yaw;
-                $pk->headYaw = ((atan2($player->z - $entity->z, $player->x - $entity->x) * 180) / M_PI) - 90;
-                $pk->pitch = $pitch;
-                $player->dataPacket($pk);
-                $entity->setRotation($yaw, $pitch);
-            }
-        }
+    			if($entity instanceof NPCHuman){
+    				$pk = new MoveEntityPacket();
+    				$v = new Vector2($entity->x, $entity->z);
+    				$yaw = ((atan2($player->z - $entity->z, $player->x - $entity->x) * 180) / M_PI) - 90;
+    				$pitch = ((atan2($v->distance($player->x, $player->z), $player->y - $entity->y) * 180) / M_PI) - 90;
+    				$pk->entityRuntimeId = $entity->getId();
+    				$pk->position = $entity->asVector3()->add(0, 1.5, 0);
+    				$pk->yaw = $yaw;
+    				$pk->headYaw = ((atan2($player->z - $entity->z, $player->x - $entity->x) * 180) / M_PI) - 90;
+    				$pk->pitch = $pitch;
+    				$player->dataPacket($pk);
+    				$entity->setRotation($yaw, $pitch);
+    			}
+    		}
     	}
     }
 }

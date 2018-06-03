@@ -24,7 +24,7 @@ class WalkTask extends PluginTask{
 		parent::__construct($plugin);
 	}
 
-	public function onRun(int $tick){
+	public function onRun(int $tick): void{
 		if($this->plugin->getCfg()->get("walk") == true){
 			$entity = $this->entity;
 			$distance = $this->plugin->getCfg()->get("walk-distance");
