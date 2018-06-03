@@ -29,6 +29,7 @@ class NPCTask extends PluginTask{
 		if($entity instanceof NPCHuman){
 			$this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new SneakTask($this->plugin, $entity), 50);
 			$this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new UnSneakTask($this->plugin, $entity), 50);
+			$this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new WalkTask($this->plugin, $entity), 100);
 			$this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new ParticleTask($this->plugin, $entity), 20);
 		}
 	}

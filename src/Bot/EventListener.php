@@ -6,8 +6,9 @@ namespace Bot;
 
 use pocketmine\Player;
 use pocketmine\math\Vector2;
+use pocketmine\entity\Entity;
 use pocketmine\network\mcpe\protocol\{
-	AnimatePacket, MovePlayerPacket
+	AnimatePacket, MovePlayerPacket, MoveEntityPacket
 };
 use pocketmine\event\entity\{
 	EntitySpawnEvent, EntityDamageEvent, EntityDamageByEntityEvent
@@ -58,40 +59,29 @@ class EventListener implements Listener{
 		}
 	}
 
-	public function onMove(PlayerMoveEvent $e): void{
-		if($this->plugin->getCfg()->get("rotation") == true){
-			$player = $e->getPlayer();
-			$level = $player->getLevel();
-			$boundingbox = $player->getBoundingBox();
-			$from = $e->getFrom();
-			$to = $e->getTo();
-			$distance = $this->plugin->getCfg()->get("distance");
+    public function onPlayerMove(PlayerMoveEvent $e) : void{
+    	if($this->plugin->getCfg("rotation") == true){
+    		$player = $e->getPlayer();
+    		$from = $e->getFrom();
+    		$to = $e->getTo();
+    		$distance = $this->plugin->getCfg()->get("rotate-distance");
 
-			if($from->distance($to) < 0.1) return;
-			foreach($level->getNearByEntities($boundingbox->grow($distance, $distance, $distance), $player) as $entity){
-				if($entity instanceof Player) continue;
-
-				$xdiff = $player->x - $entity->x;
-				$ydiff = $player->y - $entity->y;
-				$zdiff = $player->z - $entity->z;
-				$angle = atan2($zdiff, $xdiff);
-				$yaw = (($angle * 180) / M_PI) - 90;
-				$v = new Vector2($entity->x, $entity->z);
-				$dist = $v->distance($player->x, $player->z);
-				$angle = atan2($dist, $ydiff);
-				$pitch = (($angle * 180) / M_PI) - 90;
-
-				if($entity instanceof NPCHuman){
-					$pk = new MovePlayerPacket();
-					$pk->entityRuntimeId = $entity->getId();
-					$pk->position = $entity->asVector3()->add(0, $entity->getEyeHeight(), 0);
-					$pk->yaw = $yaw;
-					$pk->pitch = $pitch;
-					$pk->headYaw = $yaw;
-					$pk->onGround = $entity->onGround;
-					$player->dataPacket($pk);
-				}
-			}
-		}
-	}
+    		if($from->distance($to) < 0.1) return;
+    		foreach($player->getLevel()->getNearbyEntities($player->getBoundingBox()->grow($distance, $distance, $distance), $player) as $entity){
+            if($entity instanceof NPCHuman){
+                $pk = new MoveEntityPacket();
+                $v = new Vector2($entity->x, $entity->z);
+                $yaw = ((atan2($player->z - $entity->z, $player->x - $entity->x) * 180) / M_PI) - 90;
+            	$pitch = ((atan2($v->distance($player->x, $player->z), $player->y - $entity->y) * 180) / M_PI) - 90;
+                $pk->entityRuntimeId = $entity->getId();
+                $pk->position = $entity->asVector3()->add(0, 1.5, 0);
+                $pk->yaw = $yaw;
+                $pk->headYaw = ((atan2($player->z - $entity->z, $player->x - $entity->x) * 180) / M_PI) - 90;
+                $pk->pitch = $pitch;
+                $player->dataPacket($pk);
+                $entity->setRotation($yaw, $pitch);
+            }
+        }
+    	}
+    }
 }

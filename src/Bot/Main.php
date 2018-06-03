@@ -43,7 +43,7 @@ class Main extends PluginBase{
 	}
 
 	public function spawnNPC(Player $player, string $name): void{
-		$nbt = Entity::createBaseNBT($player, null, 2, 2);
+		$nbt = Entity::createBaseNBT($player, null, $player->getYaw(), $player->getPitch());
 		$nbt->setTag($player->namedtag->getTag("Skin"));
 		$npc = new NPCHuman($player->getLevel(), $nbt);
 		$npc->setNameTag($name);

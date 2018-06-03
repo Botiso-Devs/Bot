@@ -10,11 +10,14 @@ sneak: true
 unsneak: true
 # Make the bots rotate
 rotation: true
-distance: 16
+rotate-distance: 16
 # Make the bots swing
 swing: true
+# Make the bots walk
+walk: true
+walk-distance: 0.5
 # Add circle particles to your bots
 particles: true
 # damage mode for bots
-damage: false
+damage: true
 ...
