@@ -28,6 +28,10 @@ class Main extends PluginBase{
 	}
 
 	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool{
+		if(!$sender->isOp()){
+			return false;
+		}
+		
 		if(count($args) < 1){
 			$sender->sendMessage("Usage: /bot <name>");
 			return false;
