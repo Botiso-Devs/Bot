@@ -19,7 +19,7 @@ walk-distance: 0.5
 # Add circle particles to your bots
 particles: true
 # damage mode for bots
-damage: true
+damage: false
 
 # Only support 1 level for now
 level: world
