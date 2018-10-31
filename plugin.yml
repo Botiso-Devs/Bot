@@ -1,6 +1,6 @@
 name: Bot
 version: 2.0.0
-api: 3.0.0-ALPHA12
+api: 3.3.0
 main: Bot\Main
 author: xXNiceYT, Blaze, FreeGamingHere
 
